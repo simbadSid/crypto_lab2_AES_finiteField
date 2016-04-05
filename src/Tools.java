@@ -4,6 +4,31 @@
 
 public class Tools
 {
+	public static int multiplyMatrixByPoly(int[] matrix, int poly, int addPoly, int matrixXSize)
+	{
+		int res		= 0;
+		int maskI	= 1;
+
+		for (int i=0; i<matrix.length; i++)				// For each line of the matrix A
+		{
+			int xi		= (matrix[i] & poly);			//		xi = A * y  (line i)
+			int bi		= (poly & maskI);				//		bi will store the bit result[i]
+			int maskJ	= 1;
+			for (int j=0; j<matrixXSize; j++)			//		Count the number of 1 in xi
+			{
+				if ((xi & maskJ) == 1)					//			If the j th bit of xi is 1 then inverse the result bit
+				{
+					bi = (~bi) & maskI;
+				}
+				maskJ = maskJ << 1;
+			}
+			res = res | bi;
+			maskI = maskI << 1;
+		}
+
+		return res;
+	}
+
 	public static int leftCyclicShift(int a, int shift, int nbrInputBit)
 	{
 		if ((nbrInputBit < 0) || (nbrInputBit > Integer.SIZE))
