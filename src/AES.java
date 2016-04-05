@@ -44,7 +44,7 @@ public class AES
 			throw new RuntimeException("The given block size excedes the considered block size (" + sizeBlock + ")");
 
 		int y	= inversIn2[a];
-		int res	= Tools.multiplyMatrixByPoly(A, y, c, sizeBlock);
+		int res	= Tools_F_2_power_3.multiplyMatrixByPoly(A, y, c, sizeBlock);
 		return res;
 	}
 
@@ -78,9 +78,9 @@ public class AES
 		{
 if (i > 1) throw new RuntimeException("Not nbrRound > 2 is handeled yet");
 			T = res[i-1][nbrBlock-1];
-			T = Tools.leftCyclicShift(T, 2, sizeBlock);
+			T = Tools_F_2_power_3.leftCyclicShift(T, 2, sizeBlock);
 			T = s_box[T];
-//TODO			T = T ^ (X^i mod P8);
+//TODO			T = T ^ (X^i mod kernelPoly);
 T = T ^ 2;
 			res [i][0] = res[i-1][0] ^ T;
 			res [i][1] = res[i-1][1] ^ res[i][0];
@@ -93,7 +93,8 @@ T = T ^ 2;
 
 	public int[] mixColmn(int[] matrix)
 	{
-		
+//TODO
+return null;		
 	}
 
 // ----------------------------------------
@@ -102,10 +103,37 @@ T = T ^ 2;
 	public static void main(String[] args)
 	{
 		AES coder = new AES();
+
+		System.out.println("Question 2: full s-box on " + coder.sizeBlock + "bits");
 		int[] sbox = coder.S_box();
 
 		for (int i = 0; i<sbox.length; i++)
-			System.out.println("\t" + i + "\t-> " + sbox[i]);
+			System.out.println("\t\t" + i + "\t-> " + sbox[i]);
+
+
+
+		
+		
+		
+
+		
+		System.out.println("\n\n-----------------------------------");
+		System.out.print("Question 3: key schedule on the key");
+		int[] key = {3, 4, 4, 1};
+		for (int k:key)
+			System.out.print("  " + Tools_F_2_power_3.bitRepresentation(k, coder.sizeBlock));
+		System.out.println();
+		int[][] keySchedul = coder.keySchedule(key);
+		for (int i=0; i<keySchedul.length; i++)
+		{
+			System.out.print("\t\tRound " + i + "\t: ");
+			for (int k:keySchedul[i])
+			{
+				String representation = Tools_F_2_power_3.bitRepresentation(k, coder.sizeBlock);
+				System.out.print("   " + representation);
+			}
+			System.out.println();
+		}
 
 	}
 }
