@@ -4,6 +4,16 @@
 
 public class Tools_F_2_power_3
 {
+// ------------------------------------
+// Attributes
+// ------------------------------------
+	public final static int		kernelPoly= 11;							// Polynomial	X^3 + X + 1
+	public final static int[]	inversIn2 = {0, 1, 5, 6, 7, 2, 3, 4};	// Tab[i] = Inverse of i in F(2^3)
+																		// F(2^3) = (X1 X2 X3) where Xi in [0, 1]
+
+// ------------------------------------
+//Local methods
+// ------------------------------------
 	/**
 	 * matrix[i] is the i line (polynomial)
 	 */
@@ -31,6 +41,41 @@ public class Tools_F_2_power_3
 		}
 
 		return res;
+	}
+
+	public static int inverse(int a)
+	{
+//TODO
+//		return inversIn2[a];
+		int res = (int) Math.pow(a, 6);		// 6 = 2^3 - 2
+
+		return moduloPolynomial(res, kernelPoly);
+	}
+
+	/**
+	 * Return the rest of the Euclidian division of the input polynom p by the divisor polynom
+	 */
+	public static int moduloPolynomial(int p, int divisor)
+	{
+		int p0 = p;
+		int p1 = divisor;
+		int d0 = degreeOfPolynom(p0);
+		int d1 = degreeOfPolynom(p1);
+
+		while (d0 >= d1)
+		{
+/*System.out.println("p0 = " + bitRepresentation(p0, 8));
+System.out.println("p1 = " + bitRepresentation(p1, 8));
+System.out.println("d0 = " + d0);
+System.out.println("d1 = " + d1);
+System.out.println("-----------------------");
+*/			int dQotient	= d0 - d1;
+			int mult		= p1 << dQotient;
+			p0				= p0 ^ mult;
+			d0				= degreeOfPolynom(p0);
+		}
+
+		return p0;
 	}
 
 	public static int leftCyclicShift(int a, int shift, int nbrInputBit)
@@ -81,6 +126,23 @@ public class Tools_F_2_power_3
 		}
 
 		return res;
+	}
+
+	public static int degreeOfPolynom(int polynom)
+	{
+		if (polynom <  0)	throw new RuntimeException("Wrong representation of a polynom: " + polynom);
+		if (polynom == 0)	return 0;
+
+		int a	= polynom;
+		int deg	= -1;
+
+		while(a > 0)
+		{
+			deg	++;
+			a	= a >> 1;
+		}
+
+		return deg;
 	}
 
 	public static String bitRepresentation(int a, int nbrBit)
