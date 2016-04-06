@@ -45,8 +45,6 @@ public class Tools_F_2_power_3
 
 	public static int inverse(int a)
 	{
-//TODO
-//		return inversIn2[a];
 		int res = (int) Math.pow(a, 6);		// 6 = 2^3 - 2
 
 		return moduloPolynomial(res, kernelPoly);
